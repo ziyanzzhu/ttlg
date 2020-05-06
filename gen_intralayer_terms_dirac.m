@@ -52,7 +52,7 @@ function H = gen_intralayer_terms_dirac(k_list,layers,tar_q,E_field)
             prefac = exp(-1j*prefac_on*theta_here);
             
             H(ibeg:ibeg+1, ibeg:ibeg+1) = -vf*[V(i), (kx+1j*ky)*prefac; 
-                                               (kx-1j*ky)*conj(prefac), V(i)]?
+                                               (kx-1j*ky)*conj(prefac), V(i)];
                  
         end 
         
