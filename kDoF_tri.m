@@ -26,7 +26,7 @@ classdef kDoF_tri < handle
             grid_s = obj.grid_search;
             k_idx = 0;
             
-            [junk,ind] = min(abs([obj.layer_list(1).theta, obj.layer_list(3).theta]));
+            [~,ind] = min(abs([obj.layer_list(1).theta, obj.layer_list(3).theta]));
             kcut = norm(obj.layer_list(2*(ind-1)+1).G(:,1)-obj.layer_list(2).G(:,1));
             
             for i = 1:3 
@@ -38,15 +38,14 @@ classdef kDoF_tri < handle
                 l_2 = mod(l,3)+1;
                 l_3 = mod(l+1,3)+1;
                 
-                kcut1 = obj.max_k*norm(K(:,2));%*2/(mod(l,2)+1);
-                % kcut2 = obj.max_k*norm(K(:,2));%*(mod(l,2)+1)/2;
+                kcut1 = obj.max_k*norm(K(:,2))*sqrt(3);
      
                 b1 = obj.layer_list(l_1).G;
                 b2 = obj.layer_list(l_2).G;
                 b3 = obj.layer_list(l_3).G;
                 
-                kcut2 = 4*norm(b1(:,2)); % constraining the norm of monolayer G vectors
-                kcut2 = kcut1;
+                % kcut2 = 4*norm(b1(:,2)); 
+                kcut2 = kcut1; % constraining the norm of monolayer G vectors
                 
                 shift_vec=K(:,l_1)-K(:,2);
                 grid_s1 = grid_s; 
@@ -76,8 +75,7 @@ classdef kDoF_tri < handle
                                         % mapping back to be near the origin of the given layer
                                         % and the origin is the K point of layer 2 (shifting by shift_vec) 
                                         k_here = k2+k3-k1+shift_vec;       
-                                        % k_here = k2+k3+shift_vec;
-                                        
+    
                                         k_in(1) = k_here(1);
                                         k_in(2) = k_here(2); 
                                         k_in(3) = l_1; 

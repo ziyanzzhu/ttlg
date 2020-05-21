@@ -1,5 +1,5 @@
 # Electronic structures of twited trilayer graphene
-Files:
+## Description of Code:
 
 `getRecip.m`: calculate the reciprocal space lattice
 
@@ -16,4 +16,3 @@ Files:
 `triG_bands_calc.m`: calculates the band structure 
 
 `triG_dos_calc_gauss.m`: calculates the DOS
-
