@@ -3,6 +3,8 @@
 % generating intralayer Hamiltonian (rotated Dirac Hamiltonian)
 % input: k_list: list of k in the basis
 %        layers: `layers` objected generated using `Layer.m`
+%        tar_q: center site
+%        E_field: non-zero value if E_field is turned on
 function H = gen_intralayer_terms_dirac(k_list,layers,tar_q,E_field)
     
     vf = 6.582*0.8; % Fermi velocity, 6.582 is the conversion factor from hbar
@@ -41,11 +43,12 @@ function H = gen_intralayer_terms_dirac(k_list,layers,tar_q,E_field)
             ind = ind+1;
             ibeg = 2*(ind-1)+1;
             
+            % rotation
             prefac_on = 1; 
             prefac = exp(-1j*prefac_on*theta_here);
             
             H(ibeg:ibeg+1, ibeg:ibeg+1) = vf*[V(i), (kx+1j*ky)*prefac; 
-                                               (kx-1j*ky)*conj(prefac), V(i)];
+                                             (kx-1j*ky)*conj(prefac), V(i)];
                  
         end 
         

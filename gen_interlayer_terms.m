@@ -18,6 +18,7 @@ function H_inter = gen_interlayer_terms(k_list, layers)
     end 
     
     ph = [0, -2*pi/3, 2*pi/3];
+    
     % interlayer coupling strengths of AA and AB-type
     w_aa = 0.07; 
     w_ab = 0.11; 
@@ -68,7 +69,8 @@ function H_inter = gen_interlayer_terms(k_list, layers)
                         
         end 
     end
-    
-     H_inter = H_inter + H_inter';    
+     
+    % making sure the Hamiltonian is Hermitian
+    H_inter = H_inter + H_inter';    
     
 end

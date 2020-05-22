@@ -9,7 +9,7 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
 % setup & geometry 
-theta_list = [-3 0 1.4];  % twisting angles in degree (global)
+theta_list = [-1.3 0 3.2];  % twisting angles in degree (global)
 k_cutoff = 3;           % cutoff
 grid_search = 20;       % [G1,G2] are in [-grid_search,grid_search]^2 
 

@@ -1,20 +1,34 @@
+% authors: ziyan (zoe) zhu
+% email: zzhu1@g.harvard.edu
+% Example calculation of the tTLG DOS
+
 clear all
-%close all
 f_size = 22;
 set(groot, 'DefaultTextInterpreter', 'Latex')
 set(groot, 'DefaultLegendInterpreter', 'Latex')
 set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
-q1_list = -2.2; 
-q2_list = 2.2;
+% the list of twist angles
+q1_list = -1.5; 
+q2_list = [2.5:0.3:3.3];
+
 monoG = 1;  % if on, turn off the interlayer coupling
 savedata = 0; 
 savetxt = 0; 
-savepng = 0;
+
+k_cutoff = 2;        % cutoff in momentum space in the of reciprocal lattice constant
+grid_search = 15;    % [G1,G2] are in [-grid_search,grid_search]^2 
+num_eigs = 20;       % the number of eigenvalues to keep 
+q_cut_type = 1;      % Brillouin zone sampling
+E_field = 0;         % electric field (potential energy in eV across the 3 layers)
+nq = 20;             % number of k points to sample
+
+% the total number of twist angles to calculate
 tot_pt = length(q1_list)*length(q2_list);
 qidx_here = 0;
 
+% loop over all twist angle combinations
 for q1_idx = 1:length(q1_list) 
     for q2_idx = 1:length(q2_list)
         
@@ -22,42 +36,10 @@ for q1_idx = 1:length(q1_list)
         fprintf("Running twist angle %d/%d \n", qidx_here, tot_pt)
        
         theta_list = [q1_list(q1_idx) 0 q2_list(q2_idx)]; % twisting angles (global)
-        k_cutoff = 3.5;                                     % cutoff in momentum space
-        grid_search = 15;                                 % [G1,G2] are in [-grid_search,grid_search]^2 
-        num_eigs = 100;
-        sigma = 4e-3/3;
-        sigma = 0; 
-
-        proj = [1, 2, 3];  % sheet to project eigenvector weights onto
-        q_cut_type = 1; % what kind of line-cut we do in momentum space
-       
-        weight_cut = 0; % only plot parts of the bands, not very useful
-        E_field = 0; % electric field 
 
         % w_inv ~ 1/width of the Gaussian
         w_inv = 1e3/2;
         E_list = linspace(-1,1,1e3);
-
-        nq = 31; % number of k points to sample
-
-        colors = [.7, .2, 0; 
-                  0, .7, .2;
-                  .2, 0, .7];
-
-        if length(proj) == 3
-            figname = ['all_proj_q12_' num2str(-theta_list(1)) '_q23_' num2str(abs(theta_list(3)))...
-                        '_kcut_' num2str(k_cutoff) '_qtype_' num2str(q_cut_type)];
-
-        else 
-            figname = ['q12_' num2str(-theta_list(1)) '_q23_' num2str(abs(theta_list(3)))...
-                        '_kcut_' num2str(k_cutoff) '_qtype_' num2str(q_cut_type) ''];
-        end 
-
-%         if int_off
-%             figname = ['int12off' figname];
-%         end 
-
-        ax_m = 7;
 
         % create layer data structures
         for t = 1:3
@@ -82,10 +64,6 @@ for q1_idx = 1:length(q1_list)
            K(t,:) = [cos(th) -sin(th); sin(th) cos(th)]*K0;
         end
 
-        % define the k-point sampling
-        % samp = linspace(0,1,nq)';
-        % samp = samp(1:end-1);
-
         d = (1.0/2.0)*sqrt(sum(K(2,:) - K(1,:).^2));
 
         K_1 = K(1,:);
@@ -104,11 +82,11 @@ for q1_idx = 1:length(q1_list)
         q2_23 = rot120 * q1_23;
         q3_23 = rot120 * q2_23; 
 
-        if q_cut_type == 0 
+        if q_cut_type == 0  % monolayer 
             bz_base_1 = G2(:,1);
             bz_base_2 = G2(:,2);
 
-        elseif q_cut_type == 1  % K-Gamma-M of the L12 supercell
+        elseif q_cut_type == 1  % L12 supercell
             bz_base_1 = b12(:,1);
             bz_base_2 = b12(:,2);
 
@@ -120,11 +98,6 @@ for q1_idx = 1:length(q1_list)
             bz_base_2 = b12(:,2);
 
             type = 'L23 supercell';
-
-        elseif q_cut_type == 4 
-            bz_base_1 = b_tri(:,1);
-            bz_base_2 = b_tri(:,2);
-
         end
 
         for nq_idx = 1:length(nq) 
@@ -150,7 +123,8 @@ for q1_idx = 1:length(q1_list)
             % figure(123)
             % set(gcf,'Position',[-15 521 884 284])
             % hold on;
-
+            
+            % loop over the list of 
             for c_idx = 1:length(k_cutoff)
                 tic
                 % setup kp model (output the list of scattered k's)
@@ -195,7 +169,8 @@ for q1_idx = 1:length(q1_list)
                 end
 
                 clear dos
-                % get monolayer terms for each k point, then the band structure
+                
+                % get monolayer terms for each k point
                 for q_idx = 1:size(q_list,1)
                     id = mod(q_idx,size(q_list,1));
                     if id == 0 
@@ -209,8 +184,7 @@ for q1_idx = 1:length(q1_list)
                     end 
 
                     H_intra = gen_intralayer_terms_dirac(k_list,layers,tar_q,E_field);
-                    % H_intra = gen_intralayer_terms(k_list,layers,tar_q);
-                    
+                   
                     if monoG == 0 
                         H = H_intra+H_inter; 
                     else 
@@ -218,7 +192,6 @@ for q1_idx = 1:length(q1_list)
                     end 
 
                     dos(q_idx, :) = dos_gauss_smear(H, tar_dofs, w_inv, E_list, length(H), sigma);
-
 
                     fprintf("Diagonalization done with %d / %d \n",q_idx,size(q_list,1));
                 end
