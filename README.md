@@ -47,9 +47,9 @@ Description of input arguments can be found at the beginning of the individual f
 The following two examples are included. Examples were tested with MATLAB version `MATLAB_R2019b` and `MATLAB_R2020a`. 
 To get a more accurate result, increase the value of `k_cutoff` to increase the cutoff radius.  
 
-1. `triG_bands_calc.m`: calculates the band structure at \theta_{12} = 1.3 deg., \theta_{23} = 3.2 deg, output will be saved to folder `/data`
+1. `triG_bands_calc.m`: calculates the band structure at θ12 = 1.3 deg., θ23 = 3.2 deg, output will be saved to folder `/data`
 
-2. `call_dos.m`: calculates the DOS by calling `dos_calc_tri.m` for \theta_{12} = 1.3 deg., \theta_{23} = 2.3, 3.2 deg. 
+2. `call_dos.m`: calculates the DOS by calling `dos_calc_tri.m` for θ12 = 1.3 deg., θ23 = 2.3, 3.2 deg. 
 
 Outputs will be saved to folder `/data`; default number of parallel workers 4. Parallelize the k-space sampling. Have the option to run on a cluster. 
 
@@ -61,6 +61,6 @@ Outputs will be saved to folder `/data`; default number of parallel workers 4. P
 
 Full density of states dataset used for the paper is available upon request.
 
-One example density of states at \theta_{12} = 1.4 deg., \theta_{23} = 3.2 deg is included in the folder:
+One example density of states at θ12 = 1.4 deg., θ23 = 3.2 deg is included in the folder:
 See `data/published/dos_q12_1.5_q23_3.2_kcut_4_qtype_1_nq_484_zip.mat` and `data/published/dos_q12_3.2_q23_1.5_kcut_4_qtype_1_nq_484_zip.mat` 
 This dataset sets `k_cutoff = 4` with grid size 22 x 22 as in the paper. The DOS is obtained by averaging the two `dos_tot` from the two files. Note that normalization is needed
