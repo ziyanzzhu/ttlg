@@ -4,7 +4,7 @@ Calculation of the electronic band structure and density of twisted trilayer gra
 
 ## Citation
 
-For reference of the `ttlg` model, cite/see the following manuscript: 
+For reference of the `ttlg` model, please see and cite the following manuscript: 
 
 "Twisted Trilayer Graphene: a precisely tunable platform for correlated electrons" 
 
@@ -24,21 +24,22 @@ Please contact me with any issues and/or request.
 
 ## Code Descriptions
 
-(1) `getRecip.m`: calculate the reciprocal space lattice
+1. `getRecip.m`: calculate the reciprocal space lattice
 
-(2) `Layer.m`: create an object that contains the geometry of 3 monolayers
+2. `Layer.m`: create an object that contains the geometry of 3 monolayers
 
-(3) `kDOF_tri.m`: create the k degrees of freedom for a given cutoff
+3. `kDOF_tri.m`: create the k degrees of freedom for a given cutoff
 
-(4) `gen_interlayer_terms_mbd.m`: construct interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
+4. `gen_interlayer_terms_mbd.m`: construct interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
 
-(5) `gen_intralayer_terms_dirac.m`: constract intralayer rotated Dirac Hamiltonian 
+5. `gen_intralayer_terms_dirac.m`: constract intralayer rotated Dirac Hamiltonian 
 
-(6) `dos_gauss_smear.m`: calculates the DOS using Gaussian smaering
+6. `dos_gauss_smear.m`: calculates the DOS using Gaussian smaering
 
-(7) `dos_calc_tri.m`: calculate the ttlg DOS and (optional) save data to folder `/data/`
+7. `dos_calc_tri.m`: calculate the ttlg DOS and (optional) save data to folder `/data/`
 
-Input arguments can be found at the beginning of the individual file. 
+
+Description of input arguments can be found at the beginning of the individual file. 
 
 
 ## Examples
@@ -46,13 +47,13 @@ Input arguments can be found at the beginning of the individual file.
 The following two examples are included. Examples were tested with MATLAB version `MATLAB_R2019b` and `MATLAB_R2020a`. 
 To get a more accurate result, increase the value of `k_cutoff` to increase the cutoff radius.  
 
-(1) `triG_bands_calc.m`: calculates the band structure at \theta_{12} = 1.3 deg., \theta_{23} = 3.2 deg, output will be saved to folder `/data`
+1. `triG_bands_calc.m`: calculates the band structure at \theta_{12} = 1.3 deg., \theta_{23} = 3.2 deg, output will be saved to folder `/data`
 
-(2) `call_dos.m`: calculates the DOS by calling `dos_calc_tri.m` for \theta_{12} = 1.3 deg., \theta_{23} = 2.3, 3.2 deg. 
+2. `call_dos.m`: calculates the DOS by calling `dos_calc_tri.m` for \theta_{12} = 1.3 deg., \theta_{23} = 2.3, 3.2 deg. 
 
 Outputs will be saved to folder `/data`; default number of parallel workers 4. Parallelize the k-space sampling. Have the option to run on a cluster. 
 
-The DOS is obtained by integrating over the bilayer moir\'e Brillouin zone of L1 and L2 only.  Need to also integrate over the L2 and L3 DOS and overage over the two moir\'e Brillouin zones. `k_cutoff` is set to be 3, resulting in ~1,800 degrees of freedom, and the grid size is 16 x 16. For a more accurate result, need to increase the cutoff radius and finer grid sampling. The parameter `w_inv` that controls the Gaussian width needs to be adjusted accordingly. In this example, we set `w_inv = 50`. With a finer sampling and a larger `k_cutoff`, `w_inv` needs to also increase.
+  The DOS is obtained by integrating over the bilayer moir\'e Brillouin zone of L1 and L2 only.  Need to also integrate over the L2 and L3 DOS and overage over the two moir\'e Brillouin zones. `k_cutoff` is set to be 3, resulting in ~1,800 degrees of freedom, and the grid size is 16 x 16. For a more accurate result, need to increase the cutoff radius and finer grid sampling. The parameter `w_inv` that controls the Gaussian width needs to be adjusted accordingly. In this example, we set `w_inv = 200` (roughly the inverse of Gaussian width in eV^{-1}). With a finer sampling and a larger `k_cutoff`, `w_inv` needs to also increase.
 
 
 
