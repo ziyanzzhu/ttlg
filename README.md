@@ -60,7 +60,3 @@ Outputs will be saved to folder `/data`; default number of parallel workers 4. P
 ## Data Availability
 
 Full density of states dataset used for the paper is available upon request.
-
-One example density of states at θ12 = 1.4 deg., θ23 = 3.2 deg is included in the folder:
-See `data/published/dos_q12_1.5_q23_3.2_kcut_4_qtype_1_nq_484_zip.mat` and `data/published/dos_q12_3.2_q23_1.5_kcut_4_qtype_1_nq_484_zip.mat` 
-This dataset sets `k_cutoff = 4` with grid size 22 x 22 as in the paper. The DOS is obtained by averaging the two `dos_tot` from the two files. Note that normalization is needed
