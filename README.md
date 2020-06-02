@@ -10,7 +10,7 @@ For reference of the `ttlg` model, please see and cite the following manuscript:
 
 Ziyan Zhu, Stephen Carr, Daniel Massatt, Mitchell Luskin, and Efthimios Kaxiras
 
-<<arXiv link here>>
+arXiv:2006.00399
 
 
 
