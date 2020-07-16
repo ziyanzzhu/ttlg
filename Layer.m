@@ -1,3 +1,4 @@
+% 07/14/2020 updated: add alpha as an argument (lattice constant)
 classdef Layer
     % Basic datastructure to store geometric info for a 2D layer.
     
@@ -11,13 +12,13 @@ classdef Layer
     end
     
     methods
-        function obj = Layer(index,theta)
+        function obj = Layer(index,theta,alpha)
             %Layer Construct an instance of this class
             %   Detailed explanation goes here
             obj.layer_index = index;
             obj.theta = theta;
             
-            alpha = 1.42*sqrt(3);
+            % alpha = 1.42*sqrt(3);
             
             obj.A_local = alpha*[   1       1/2
                                     0 sqrt(3)/2];

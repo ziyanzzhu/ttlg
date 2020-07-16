@@ -7,34 +7,38 @@
 %         layers) 
 %         k_cutoff: k space cutoff in the unit of reciprocal space lattice
 %         constant 
-%         w_inv: roughly prop to 1/Gaussian width
+%         param: Gaussian FWHM
 %         nq: grid size. total grid size is (nq+1)x(nq+1)
 %         num_eigs: number of eigenvalues to keep in the diagonalization
 %         E_list: the list of energy to sample
 %         q_cut_type: type of Brillouin zone sampling. 
-%                     type 1: monolayer Brillouin zone
-%                     type 2: L12 moire Brillouin zone
-%                     type 3: L23 moire Brillouin zone
-%         monoG: if on, normalize the dos_tot by the expected monolayer
-%         density of states
-% return: filename that the data is saved to
-function fname=dos_calc_tri(q1_list,q2_list,E_field,k_cutoff,w_inv,nq,num_eigs,E_list,q_cut_type,monoG)
+%                     type 0: monolayer Brillouin zone
+%                     type 1: L12 moire Brillouin zone
+%                     type 2: L23 moire Brillouin zone
+% return: dos_tot: total density of states (normalized) 
+%         dos_tot_mono: total density of states of monolayer graphene
+%         (normalized) 
+%         dos_fit: polyfit to dos_tot_mono
+%         prefac: normalization constant
 
-    monoG = 1;   % normalize by the monolayer DOS
+function [dos_tot, dos_tot_mono, dos_fit, prefac]=dos_calc_tri(alpha,q1_list,q2_list,E_field,k_cutoff,param,nq,num_eigs,E_list,q_cut_type,save_data)
+
     linecut = 0; % if on, calculate the DOS for a line (useful for debugging)
     run_idx = 1; 
  
     for q1_idx = 1:length(q1_list) 
         for q2_idx = 1:length(q2_list)
-
-            theta_list = [q1_list(q1_idx) 0 q2_list(q2_idx)]; % twisting angles (global)
+                
+            q12 = q1_list(q1_idx);
+            q23 = q2_list(q2_idx);
+            theta_list = [q12 0 q23];                         % twisting angles (global)
             grid_search = 15;                                 % [G1,G2] are in [-grid_search,grid_search]^2 
             disp("Global twist angles in deg.: ") 
             disp(theta_list)
    
             % create layer data structures
             for t = 1:3
-               layers(t) = Layer(t,deg2rad(theta_list(t)));
+               layers(t) = Layer(t,deg2rad(theta_list(t)),alpha);
             end
 
             G1 = layers(1).G; 
@@ -76,7 +80,6 @@ function fname=dos_calc_tri(q1_list,q2_list,E_field,k_cutoff,w_inv,nq,num_eigs,E
 
             end
 
-                
             bz_n = nq;
             dk = 1/bz_n;
             grid_mesh = 0:dk:1;
@@ -113,7 +116,7 @@ function fname=dos_calc_tri(q1_list,q2_list,E_field,k_cutoff,w_inv,nq,num_eigs,E
             end
 
             % interlayer term
-            H_inter = gen_interlayer_terms_mbd(k_list,layers);
+            H_inter = gen_interlayer_terms(k_list,layers);
 
             clear dos
 
@@ -127,54 +130,46 @@ function fname=dos_calc_tri(q1_list,q2_list,E_field,k_cutoff,w_inv,nq,num_eigs,E
                 tar_q = q_list(id,:);
 
                 H_intra = gen_intralayer_terms_dirac(k_list,layers,tar_q,E_field);
+                H = H_inter + H_intra;
 
                 % monolayer DOS
-                if monoG 
-                    dos_mono(q_idx, :) = dos_gauss_smear(H_intra, tar_dofs, w_inv, E_list, num_eigs, 1e-4);
-                end 
-
-                H = H_intra+H_inter; 
-                dos(q_idx, :) = dos_gauss_smear(H, tar_dofs, w_inv, E_list, num_eigs, 1e-4);
+                dos_mono(q_idx, :) = dos_gauss_smear(H_intra, tar_dofs, param, E_list, num_eigs, 1e-4);
+                
+                dos(q_idx, :) = dos_gauss_smear(H, tar_dofs, param, E_list, num_eigs, 1e-4);
 
                 fprintf("Diagonalization done with %d / %d \n",q_idx,size(q_list,1));
             end
          
+            dos_tot_mono = sum(dos_mono,1);
 
-            % normalization: making sure that the dos integrate to unity
-            if monoG
-                dos_tot_mono = sum(dos_mono,1);
+            % fit to expected slope 
+            cond = E_list>=0 & E_list < 100e-3;
+            dos_fit = polyfit(E_list(cond), dos_tot_mono(cond),1); 
+
+            % normalize to graphene DOS, g(E) = 2*A_c*E/pi/vF^2
+            hbar = 6.582119569e-16; % unit: eV.s
+            vF = 0.8e15; % unit: nm/s 
+            slope = 6/pi/vF^2/hbar^2; % expected slope for monolayer graphene DOS. factor of 3 from three layers 
+
+            prefac(run_idx) = slope/dos_fit(1); 
+            dos_tot_mono = prefac(run_idx) * dos_tot_mono;
                 
-                % fit the slope 
-                cond = E_list>=0 & E_list < 100e-3;
-                dos_fit = polyfit(E_list(cond), dos_tot_mono(cond),1); 
-
-                % normalize to graphene DOS, g(E) = 2*A_c*E/pi/vF^2
-                hbar = 6.582119569e-16; % unit: eV.s
-                vF = 0.8e15; % unit: nm/s 
-                slope = 6/pi/vF^2/hbar^2; % expected slope for monolayer graphene DOS. factor of 3 from three layers 
-
-                prefac(run_idx) = slope/dos_fit(1); 
-                dos_tot_mono = prefac(run_idx) * dos_tot_mono;
-                disp(prefac(run_idx))
-            end
+            
+            disp(prefac(run_idx))
 
             clear dos_tot dos_int
             
-            % normalize the total DOS to 1 
-            dos_tot = sum(dos,1);
-             
-            if monoG 
-                dos_tot = prefac(run_idx) * dos_tot;
-            end 
+            dos_tot = sum(dos,1) * prefac(run_idx);
+ 
+            fname = ['dos_q12_' num2str(abs(theta_list(1))) '_q23_' num2str(abs(theta_list(3)))...
+                            '_kcut_' num2str(k_cutoff) '_qtype_' num2str(q_cut_type) '_nq_' num2str((nq+1)^2) '_zip.mat'];
             
             % save data
-            q12 = q1_list(q1_idx);
-            q23 = q2_list(q2_idx);
-            fname = ['dos_q12_' num2str(abs(theta_list(1))) '_q23_' num2str(abs(theta_list(3)))...
-                        '_kcut_' num2str(k_cutoff) '_qtype_' num2str(q_cut_type) '_nq_' num2str((nq+1)^2) '_zip.mat'];
-            save(['./data/' fname ], 'dos_tot', 'dos_tot_mono', 'w_inv',...
-                'ndof', 'E_list', 'prefac', 'q12', 'q23','cond','dos_fit','monoG')
-
+            if save_data
+                save(['./data/' fname ], 'dos_tot', 'dos_tot_mono', 'param',...
+                    'ndof', 'E_list', 'prefac', 'q12', 'q23','cond','dos_fit')
+           
+            end 
 
             run_idx = run_idx + 1; 
         end

@@ -4,8 +4,7 @@
 % input: H: Hamiltonian to diagonalize 
 % tar_dofs: indices in the Hamiltonian corresponding to the center site
 % (A, B sublattices)
-% param: roughly proportional to the Gaussian width
-
+% param: Gaussian GWHM
 function [dos] = dos_gauss_smear(H, tar_dofs, param, E_list, num_eig, sigma)
     % first diagonalize the Hamiltonian to obtain a list of evals and evecs
     if num_eig ~= length(H)
@@ -24,7 +23,7 @@ function [dos] = dos_gauss_smear(H, tar_dofs, param, E_list, num_eig, sigma)
     dos = zeros(size(E_list));
     % make gaussians & calculate dof 
     for e_idx = 1:length(vals)
-        gauss_here = param / (2*pi^3) * exp(-((vals(e_idx)-E_list)*param*pi).^2);
+        gauss_here = 2*sqrt(log(2)/pi)/param*exp(-4*log(2)*(vals(e_idx)-E_list).^2/param.^2);
         for l_idx = 1:3 
             dos = dos + squeeze(gauss_here*weights(l_idx,e_idx));
         end 

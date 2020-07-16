@@ -9,26 +9,27 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
 % setup & geometry 
-theta_list = [-1.3 0 3.2];  % twisting angles in degree (global)
+theta_list = [-3 0 1.6];  % twisting angles in degree (global)
 k_cutoff = 3;           % cutoff
 grid_search = 20;       % [G1,G2] are in [-grid_search,grid_search]^2 
 
 proj = [1, 2, 3];       % sheet to project eigenvector weights onto
-q_cut_type = 5;         % what kind of line-cut we do in momentum space
+q_cut_type = 1;         % what kind of line-cut we do in momentum space
                         % 1: high symmetry line in the L12 bilayer moire Brillouin zone (single valley)
                         % 2: connecting the Dirac points of 3 layers 
                         % 3: high symmetry line in the L23 bilayer moire Brillouin zone (single valley)
                         % 4: high symmetry line in the trilayer moire of moire Brillouin zone (only works when twist angles are equal and not very useful) 
                         % 5: high symmetry line along K_L1 -> K_L2 -> Gamma_12 -> Gamma_23 -> K_L2 -> K_L3
-savedata = 1;           % save useful variables to folder ./data/
+savedata = 0;           % save useful variables to folder ./data/
 E_field = 0.0;          % vertical displacement field in eV (total potential energy across the three layers)
-num_eigs = 20;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
-nq = 50;                % number of k points to sample on each high symmetry line segment 
+num_eigs = 100;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
+nq = 20;                % number of k points to sample on each high symmetry line segment 
 color_on = 1;           % plot colors in the band structure (wavefunction weights) 
+alpha = 1.43*sqrt(3);
 
 % create layer data structures
 for t = 1:3
-   layers(t) = Layer(t,deg2rad(theta_list(t)));
+   layers(t) = Layer(t,deg2rad(theta_list(t)),alpha);
 end
 
 G1 = layers(1).G; 
@@ -74,7 +75,7 @@ q3_23 = rot120 * q2_23;
 
 % defining high symmetry points
 switch q_cut_type 
-    case 1 % K-Gamma-M of the L12 supercell
+    case 1 % K-Gamma-M of the L12 supercell (note: this is shifted because the origin is not gamma point)
         k_sc = q3_12;
         m_sc = 0.5*(q3_12-q2_12);
         gamma_sc = [0, 0];
@@ -90,8 +91,9 @@ switch q_cut_type
         pt(1,:) = -q1_12;
         pt(2,:) = [0, 0];
         pt(3,:) = q1_23;
+        pt(4,:) = -q1_12;
         type = '3 cones';
-        xt_labels = {'$K_{L1}$', '$K_{L2}$', '$K_{L3}$'};
+        xt_labels = {'$K_{L1}$', '$K_{L2}$', '$K_{L3}$', '$K_{L1}$'};
     
     case 3  % K-Gamma-M of the L23 supercell
     
@@ -266,7 +268,7 @@ box on
 hold all
 
 if q_cut_type ~= 4
-    ylim([-150 150]);
+    ylim([-180 180]);
 else 
     ylim([-50 50]);
 end 

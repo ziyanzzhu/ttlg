@@ -47,9 +47,18 @@ classdef kDoF_tri < handle
                 % kcut2 = 4*norm(b1(:,2)); 
                 kcut2 = kcut1; % constraining the norm of monolayer G vectors
                 
+                
                 shift_vec=K(:,l_1)-K(:,2);
                 grid_s1 = grid_s; 
                 grid_s2 = grid_s;
+%                 if l == 3 
+%                     grid_s1 = 0;
+%                 elseif l == 2
+%                     grid_s2 = 0;
+%                 else 
+%                     grid_s1 = 0;
+%                     grid_s2 = 0;
+%                 end 
                 for n2_1 = -grid_s1:grid_s1
                     for n2_2 = -grid_s1:grid_s1
                         k2 = b2(:,1)*n2_1 + b2(:,2)*n2_2; 

@@ -30,7 +30,7 @@ Please contact me with any issues and/or request.
 
 3. `kDOF_tri.m`: create the k degrees of freedom for a given cutoff
 
-4. `gen_interlayer_terms_mbd.m`: construct interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
+4. `gen_interlayer_terms.m`: construct interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
 
 5. `gen_intralayer_terms_dirac.m`: constract intralayer rotated Dirac Hamiltonian 
 
@@ -53,14 +53,10 @@ To get a more accurate result, increase the value of `k_cutoff` to increase the 
 
 Outputs will be saved to folder `/data`; default number of parallel workers 4. Parallelize the k-space sampling. Have the option to run on a cluster. 
 
-  The DOS is obtained by integrating over the bilayer moir\'e Brillouin zone of L1 and L2 only.  Need to also integrate over the L2 and L3 DOS and overage over the two moir\'e Brillouin zones. `k_cutoff` is set to be 3, resulting in ~1,800 degrees of freedom, and the grid size is 16 x 16. For a more accurate result, need to increase the cutoff radius and finer grid sampling. The parameter `w_inv` that controls the Gaussian width needs to be adjusted accordingly. In this example, we set `w_inv = 200` (roughly the inverse of Gaussian width in eV^{-1}). With a finer sampling and a larger `k_cutoff`, `w_inv` needs to also increase.
-
+The DOS is obtained by integrating over the bilayer moir\'e Brillouin zone of L1 and L2 only.  Need to also integrate over the L2 and L3 DOS and overage over the two moir\'e Brillouin zones. `k_cutoff` is set to be 3, resulting in ~1,800 degrees of freedom, and the grid size is 42 x 42. For a more accurate result, need to increase the cutoff radius and adjust the grid sampling. The variable `param` is the Gaussian full-width-half-maximum in eV and needs to be adjusted accordingly. In this example, we set `param = 8e-3`.
 
 
 ## Data Availability
 
 Full density of states dataset used for the paper is available upon request.
 
-One example density of states at θ12 = 1.4 deg., θ23 = 3.2 deg is included in the folder:
-See `data/published/dos_q12_1.5_q23_3.2_kcut_4_qtype_1_nq_484_zip.mat` and `data/published/dos_q12_3.2_q23_1.5_kcut_4_qtype_1_nq_484_zip.mat` 
-This dataset sets `k_cutoff = 4` with grid size 22 x 22 as in the paper. The DOS is obtained by averaging the two `dos_tot` from the two files. Note that normalization is needed
