@@ -59,7 +59,3 @@ The DOS is obtained by integrating over the bilayer moir\'e Brillouin zone of L1
 ## Data Availability
 
 Full density of states dataset used for the paper is available upon request.
-<<<<<<< HEAD
-
-=======
->>>>>>> 2599d168a57d76e29bdbb0e8298f354ae11f660f
