@@ -1,3 +1,5 @@
+% author: ziyan (zoe) zhu
+% email: zzhu1@g.harvard.edu
 function Am_dom = calc_moire_dom_tri(q12, q23, A0)
     grid_search = 8; 
 

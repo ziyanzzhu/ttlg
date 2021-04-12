@@ -1,3 +1,5 @@
+% author: ziyan (zoe) zhu
+% email: zzhu1@g.harvard.edu
 % Fig. 1b short paper  
 clear all
 f_size=22;
