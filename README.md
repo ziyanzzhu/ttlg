@@ -38,7 +38,7 @@ Please contact me with any issues and/or request.
 
 7. `dos_calc_tri.m`: calculate the ttlg DOS and (optional) save data to folder `/data/`
 
-8. `/geom/` folder contain scripts to calculate the moir\'e of moir\'e lengths and to make Figure 1 of the paper.  
+8. `/geom/` folder contain scripts to calculate the moire of moire lengths and to make Figure 1 of the paper.  
 
 
 Description of input arguments can be found at the beginning of the individual file. 
