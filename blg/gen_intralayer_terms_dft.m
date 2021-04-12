@@ -16,11 +16,8 @@ function H = gen_intralayer_terms_dft(k_list,layers,q_here,E_field)
     % keeps track of the index of the Hamiltonian when unzipping
     ind = 1;
     
-    if E_field 
-        V = [-E_field/2, E_field/2]; 
-    else 
-        V = [0, 0];
-    end
+    
+    V = [-E_field/2, E_field/2]; 
     
     for i = 1:2
         
@@ -30,10 +27,12 @@ function H = gen_intralayer_terms_dft(k_list,layers,q_here,E_field)
         orb_pos = layers(i).orbPos;
 
         Q = k_list(layer_list==l_1, :);
-        Q = Q(:,1:2) + q_here;
+        Q = Q(:,1:2) + q_here; % center site 
         
         % use vectorized form to quickly compute all H terms
         H_zip = zeros(size(Q,1),2,2);
+        % for every Q, go through a 7 x 7 grid of unit cell, create a TB
+        % Hamiltonian 
         for j = -3:3
             for k = -3:3
                 R = A*[j;k];

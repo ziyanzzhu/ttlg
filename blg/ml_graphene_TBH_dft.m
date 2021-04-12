@@ -7,7 +7,7 @@ function H = ml_graphene_TBH_dft(x,y,orb_pos)
     %orb_pos(1,:) = (L*[1/3; 1/3])';
     %orb_pos(2,:) = (L*[2/3; 2/3])';
 
-    H = zeros(size(x,1),2,2);
+    H = zeros(size(x,1),2,2); % create a 2 by 2 Hamiltonian for every x position 
 
     t1 = -2.892;
     t2 =  0.243;

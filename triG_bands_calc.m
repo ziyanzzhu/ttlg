@@ -9,20 +9,21 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
 % setup & geometry 
-theta_list = [-1.3 0 3.2];  % twisting angles in degree (global)
+theta_list = [-1.4 0 2.8];  % twisting angles in degree (global)
+% theta_list = [1.55 0 1.54];
 k_cutoff = 3;           % cutoff
 grid_search = 20;       % [G1,G2] are in [-grid_search,grid_search]^2 
 
 proj = [1, 2, 3];       % sheet to project eigenvector weights onto
-q_cut_type = 5;         % what kind of line-cut we do in momentum space
+q_cut_type = 3;         % what kind of line-cut we do in momentum space
                         % 1: high symmetry line in the L12 bilayer moire Brillouin zone (single valley)
                         % 2: connecting the Dirac points of 3 layers 
                         % 3: high symmetry line in the L23 bilayer moire Brillouin zone (single valley)
                         % 4: high symmetry line in the trilayer moire of moire Brillouin zone (only works when twist angles are equal and not very useful) 
                         % 5: high symmetry line along K_L1 -> K_L2 -> Gamma_12 -> Gamma_23 -> K_L2 -> K_L3
 savedata = 1;           % save useful variables to folder ./data/
-E_field = 0.0;          % vertical displacement field in eV (total potential energy across the three layers)
-num_eigs = 20;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
+E_field = 0;          % vertical displacement field in eV (total potential energy across the three layers)
+num_eigs = 150;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
 nq = 50;                % number of k points to sample on each high symmetry line segment 
 color_on = 1;           % plot colors in the band structure (wavefunction weights) 
 
@@ -245,6 +246,8 @@ for q_idx = 1:size(q_list,1)
     fprintf("Diagonalization done with %d / %d \n",q_idx,size(q_list,1));
 end
 
+vals = vals + E_field;
+
 %% plot the band structure
 % eye pleasing colors 
 b = [0, 40, 143]/255;
@@ -255,7 +258,7 @@ weights = weights / max(weights(:));
 wcut = 1e-7; % do not plot is the weight is less than this value 
 interval = 1; % whether to skip points when plotting the bands
 
-figure(123)
+figure
 clf
 if q_cut_type ~= 5 && q_cut_type ~= 2
     set(gcf, 'Position', [66 343 390 462]);

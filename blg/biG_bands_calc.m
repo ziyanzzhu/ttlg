@@ -38,7 +38,6 @@ nq = 50;                % number of k points to sample on each high symmetry lin
 % turn on/off saving
 savedata = 0;           % save useful variables to folder ./data/
 
-
 theta_list = theta*[-0.5, 0.5];  % twist of each layer
 % create layer data structures
 for t = 1:2
