@@ -43,6 +43,7 @@ function H_inter = gen_interlayer_terms(k_list, layers)
         q2_12 = rot120 * q1_12;
         q3_12 = rot120 * q2_12;
         q_scatt = [q1_12, q2_12, q3_12];
+        disp(q_scatt)
 
         for x1 = 1:length(from_idx)
             idx_1 = from_idx(x1);
@@ -55,11 +56,15 @@ function H_inter = gen_interlayer_terms(k_list, layers)
                 q_here = q_scatt(:, j); 
                 q_diff = k1-k2;
                 id = find(abs(q_diff(1, :)-q_here(1))<=tol & abs(q_diff(2, :)-q_here(2))<=tol);
+                disp(q_diff(:,id))
+%                 disp(isempty(id))
+                disp(length(id))
                 if ~isempty(id)
+                    
                     AA_idx(1) = 2*(idx_1-1)+1;
                     AA_idx(2) = 2*(to_idx(id)-1)+1;
  
-                    H_inter(AA_idx(1), AA_idx(2))=T_here(1,1);
+                    H_inter(AA_idx(1), AA_idx(2)) = T_here(1,1);
                     H_inter(AA_idx(1), AA_idx(2)+1) = T_here(1,2);
                     H_inter(AA_idx(1)+1, AA_idx(2)) = T_here(2,1);
                     H_inter(AA_idx(1)+1, AA_idx(2)+1) = T_here(2,2);

@@ -9,12 +9,12 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
 % setup & geometry 
-theta_list = [-3 0 1.6];  % twisting angles in degree (global)
+theta_list = [1.7 0 1.7];  % twisting angles in degree (global)
 k_cutoff = 3;           % cutoff
 grid_search = 20;       % [G1,G2] are in [-grid_search,grid_search]^2 
 
 proj = [1, 2, 3];       % sheet to project eigenvector weights onto
-q_cut_type = 1;         % what kind of line-cut we do in momentum space
+q_cut_type = 3;         % what kind of line-cut we do in momentum space
                         % 1: high symmetry line in the L12 bilayer moire Brillouin zone (single valley)
                         % 2: connecting the Dirac points of 3 layers 
                         % 3: high symmetry line in the L23 bilayer moire Brillouin zone (single valley)
@@ -23,8 +23,11 @@ q_cut_type = 1;         % what kind of line-cut we do in momentum space
 savedata = 0;           % save useful variables to folder ./data/
 E_field = 0.0;          % vertical displacement field in eV (total potential energy across the three layers)
 num_eigs = 100;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
-nq = 20;                % number of k points to sample on each high symmetry line segment 
-color_on = 1;           % plot colors in the band structure (wavefunction weights) 
+nq = 30;                % number of k points to sample on each high symmetry line segment 
+color_on = 0;           % plot colors in the band structure (wavefunction weights) 
+if theta_list(1) == theta_list(3) % if L1 and L3 aligned, only support not plotting wavefunction wieghts 
+    color_on = 0; 
+end 
 alpha = 1.43*sqrt(3);
 
 % create layer data structures
@@ -241,8 +244,10 @@ for q_idx = 1:size(q_list,1)
     [raw_vecs, raw_vals] = eigs(H,num_eigs,4e-3); 
     % raw_vecs: eigenvectors with d = (2*n_dof, 2*n_dof), 1st index: dof, 2nd index: band
     [vals(q_idx,:), order] = sort(real(diag(raw_vals))); % sort eigenvalues from smallest to largest 
-    for tar_sheet = 1:3
-        weights(tar_sheet,q_idx,:) = sum(abs(raw_vecs(tar_dofs(tar_sheet),order)).^2,1);
+    if color_on 
+        for tar_sheet = 1:3
+            weights(tar_sheet,q_idx,:) = sum(abs(raw_vecs(tar_dofs(tar_sheet),order)).^2,1);
+        end 
     end 
     fprintf("Diagonalization done with %d / %d \n",q_idx,size(q_list,1));
 end
@@ -253,9 +258,15 @@ b = [0, 40, 143]/255;
 r = [224, 40, 0]/255;
 g = [15, 255-80, 103]/255;
 
-weights = weights / max(weights(:));
+
+
+if color_on 
+    weights = weights / max(weights(:));
+end 
 wcut = 1e-7; % do not plot is the weight is less than this value 
 interval = 1; % whether to skip points when plotting the bands
+
+
 
 figure(123)
 clf
@@ -273,34 +284,45 @@ else
     ylim([-50 50]);
 end 
 
-for k_idx = 1:size(q_list,1)/interval
-    
-    q_idx = (k_idx-1)*interval+1; 
-    for d = 1:size(vals,2)
-        color_here = [0,0,0];
-        wcond = max(weights(:,q_idx,d))>wcut;
-        
-        if wcond && abs((vals(q_idx,d))*1e3) < max(ylim)
-            alpha = 1;
-            weights_here = weights(:,q_idx,d)/max(weights(:,q_idx,d));
-            color_tmp = log(weights_here+1)/max(log(weights_here+1));
-            color_here = weights_here(1)*r + weights_here(2)*b + weights_here(3)*g;
+if color_on 
+    for k_idx = 1:size(q_list,1)/interval
 
-            if max(weights(:,q_idx,d)) < 0.025
-                alpha = sum(color_here);
-            end 
+        q_idx = (k_idx-1)*interval+1; 
 
-            if max(weights(:,q_idx,d)) < 0.005
-                alpha = min(color_here)*2;
-            end 
-            if alpha > 1 
-               alpha = 1;
-            end 
-            scatter(qarr(q_idx),(vals(q_idx,d))*1e3, 15, 'o', 'MarkerFaceColor', color_here, ...
-                'MarkerEdgeColor','none', 'MarkerFaceAlpha', alpha)
-        end 
+        for d = 1:size(vals,2)
+
+            color_here = [0,0,0];
+            wcond = max(weights(:,q_idx,d))>wcut;
+
+            if wcond && abs((vals(q_idx,d))*1e3) < max(ylim)
+                alpha = 1;
+                weights_here = weights(:,q_idx,d)/max(weights(:,q_idx,d));
+                color_tmp = log(weights_here+1)/max(log(weights_here+1));
+                color_here = weights_here(1)*r + weights_here(2)*b + weights_here(3)*g;
+
+                if max(weights(:,q_idx,d)) < 0.025
+                    alpha = sum(color_here);
+                end 
+
+                if max(weights(:,q_idx,d)) < 0.005
+                    alpha = min(color_here)*2;
+                end 
+                if alpha > 1 
+                   alpha = 1;
+                end 
+                scatter(qarr(q_idx),(vals(q_idx,d))*1e3, 15, 'o', 'MarkerFaceColor', color_here, ...
+                    'MarkerEdgeColor','none', 'MarkerFaceAlpha', alpha)
+            end
+        end
+        fprintf("Done with plotting %d / %d \n",q_idx,size(q_list,1));
     end
-    fprintf("Done with plotting %d / %d \n",q_idx,size(q_list,1));
+    
+else 
+    for d = 1:size(vals,2)
+    
+        scatter(qarr,(vals(:,d))*1e3, 15, 'o', 'MarkerFaceColor', 'k', 'MarkerEdgeColor','none')
+    end 
+    
 end
 
 ylabel('Energy (meV)');
