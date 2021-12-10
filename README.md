@@ -24,24 +24,24 @@ Please contact me with any issues and/or request.
 
 ## Code Descriptions
 
-1. `getRecip.m`: calculate the reciprocal space lattice
+1. `getRecip.m`: calculates the reciprocal space lattice
 
-2. `Layer.m`: create an object that contains the geometry of 3 monolayers
+2. `Layer.m`: creates an object that contains the geometry of 3 monolayers
 
-3. `kDOF_tri.m`: create the k degrees of freedom for a given cutoff
+3. `kDOF_tri.m`: creates the k degrees of freedom for a given cutoff
 
-4. `gen_interlayer_terms.m`: construct interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
+4. `gen_interlayer_terms.m`: constructs interlayer Hamiltonian (Koshino et al. 2017 style with w_aa \neq w_ab)
 
-5. `gen_intralayer_terms_dirac.m`: constract intralayer rotated Dirac Hamiltonian 
+5. `gen_intralayer_terms_dirac.m`: constracts intralayer rotated Dirac Hamiltonian 
 
 6. `dos_gauss_smear.m`: calculates the DOS using Gaussian smaering
 
-7. `dos_calc_tri.m`: calculate the ttlg DOS and (optional) save data to folder `/data/`
+7. `dos_calc_tri.m`: calculates the ttlg DOS and (optional) save data to folder `/data/`
 
-8. `/geom/` folder contain scripts to calculate the moire of moire lengths and to make Figure 1 of the paper.  
+8. `/geom/` folder contains scripts to calculate the moire of moire lengths and to make Figure 1 of the paper.  
 
 
-Description of input arguments can be found at the beginning of the individual file. 
+Description of input arguments can be found at the beginning of each file. 
 
 
 ## Examples
