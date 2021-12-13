@@ -156,21 +156,6 @@ classdef kDoF_tri < handle
                 end 
                 
             end 
-%             for i = 1:size(k_vec, 1)
-%                 k_here = k_vec(i, :); 
-%                 if idx_list(i) 
-%                     for j = i+1:size(k_vec,1)
-%                         if abs(k_vec(j,1) - k_here(1)) < tol && ...
-%                                 abs(k_vec(j,2) - k_here(2)) < tol && abs(k_vec(j,3) - k_here(3)) < tol
-%                             if ~min( k_data(j,3:end) == [k_data(j,3) 0 0 0 0 0 0])
-%                                 idx_list(j) = 0;
-%                                 idx = idx + 1;
-%                             end 
-%                         end 
-%                     end 
-%                 end 
-%             end 
-            
             
             idx_list = boolean(idx_list);
             

@@ -3,7 +3,7 @@
 % example calculatiion of the DOS
 clear all
 q1_list = 1.70;                    % list of \theta_{12} in deg.
-q2_list = [1.70];              % list of \theta_{23} in deg.
+q2_list = [1.651];              % list of \theta_{23} in deg.
 k_cutoff = 2;                     % k space cutoff in the unit of reciprocal lattice constant   
 E_list = linspace(-1,1,1e3);  % list of energies in eV
 q_cut_type = 1;                   % type of Brillouin zone sampling. 
@@ -34,6 +34,7 @@ end
 % total number of twist angles to calculate
 tot_pt = length(q1_list)*length(q2_list); 
 
+
 figure(234)
 set(gcf,'Position',[211 101 453 453])
 % clf
@@ -61,7 +62,7 @@ for i = 1:tot_pt
     ylim([-0.2 0.2])
     xlim([0 max(dos_tot_mono(:))*1.1]);
     title('Monolayer')
-    ylabel('Energy (eV')
+    ylabel('Energy (eV)')
     xlabel('DoS $\mathrm{(eV^{-1}\cdot\AA^{-2})}$');
 
     subplot(1,2,2)
