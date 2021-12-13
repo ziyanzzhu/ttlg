@@ -118,25 +118,63 @@ classdef kDoF_tri < handle
             obj.num_k = size(k_data, 1);
             
             % get rid of repeated indices
+         
+            
+%             disp(tar_dofs)
+
             k_vec = k_data(:, 1:3);
+            disp(length(k_vec))
             
             idx = 1; 
             idx_list = ones([length(k_vec), 1]);
             tol = 1e-4;
-            for i = 1:size(k_vec,1)
-                k_here = k_vec(i,:);
-                if idx_list(i)
-                    for j = i+1:1:size(k_vec,1)
-                        if abs(k_vec(j,1) - k_here(1)) < tol && abs(k_vec(j,2) - k_here(2)) < tol && abs(k_vec(j,3) - k_here(3)) < tol
-                            idx_list(j) = 0;
-                            idx = idx + 1;
+            
+            for a = 1:2
+                for i = 1:size(k_vec,1)
+                    k_here = k_vec(i,:);
+
+                    if idx_list(i)
+                        if a == 1
+                            jbeg = 1;
+                            jend = i-1;
+                        else 
+                            jbeg = i+1;
+                            jend = size(k_vec,1);
                         end 
+                            
+                        for j = jbeg:jend
+                            if abs(k_vec(j,1) - k_here(1)) < tol && ...
+                                    abs(k_vec(j,2) - k_here(2)) < tol && abs(k_vec(j,3) - k_here(3)) < tol
+                                if ~min( k_data(j,3:end) == [k_data(j,3) 0 0 0 0 0 0])
+                                    idx_list(j) = 0;
+                                    idx = idx + 1;
+                                end 
+                            end 
+                        end 
+
                     end 
                 end 
+                
             end 
+%             for i = 1:size(k_vec, 1)
+%                 k_here = k_vec(i, :); 
+%                 if idx_list(i) 
+%                     for j = i+1:size(k_vec,1)
+%                         if abs(k_vec(j,1) - k_here(1)) < tol && ...
+%                                 abs(k_vec(j,2) - k_here(2)) < tol && abs(k_vec(j,3) - k_here(3)) < tol
+%                             if ~min( k_data(j,3:end) == [k_data(j,3) 0 0 0 0 0 0])
+%                                 idx_list(j) = 0;
+%                                 idx = idx + 1;
+%                             end 
+%                         end 
+%                     end 
+%                 end 
+%             end 
+            
+            
             idx_list = boolean(idx_list);
             
-%             disp(size(k_data))
+            disp(size(k_data))
             k_data = k_data(idx_list, :);
 %             disp(size(k_data))
  

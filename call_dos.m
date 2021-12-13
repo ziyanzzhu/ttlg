@@ -2,8 +2,8 @@
 % email: zzhu1@g.harvard.edu
 % example calculatiion of the DOS
 clear all
-q1_list = 1.65;                    % list of \theta_{12} in deg.
-q2_list = [1.65];              % list of \theta_{23} in deg.
+q1_list = 1.70;                    % list of \theta_{12} in deg.
+q2_list = [1.70];              % list of \theta_{23} in deg.
 k_cutoff = 2;                     % k space cutoff in the unit of reciprocal lattice constant   
 E_list = linspace(-1,1,1e3);  % list of energies in eV
 q_cut_type = 1;                   % type of Brillouin zone sampling. 
