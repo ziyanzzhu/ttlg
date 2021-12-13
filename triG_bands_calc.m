@@ -25,6 +25,8 @@ E_field = 0.0;          % vertical displacement field in eV (total potential ene
 num_eigs = 100;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
 nq = 30;                % number of k points to sample on each high symmetry line segment 
 color_on = 0;           % plot colors in the band structure (wavefunction weights) 
+alpha = 1.43*sqrt(3);
+
 % create layer data structures
 for t = 1:3
    layers(t) = Layer(t,deg2rad(theta_list(t)),alpha);
