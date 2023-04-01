@@ -16,7 +16,7 @@ Phys. Rev. Lett. 125, 116404
 
 ## Contact
 
-Ziyan (Zoe) Zhu: zzhu1 [at] g.harvard.edu
+Ziyan (Zoe) Zhu: ziyanzhu@stanford.edu
 
 Please contact me with any issues and/or request. 
 
