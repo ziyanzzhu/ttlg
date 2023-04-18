@@ -1,3 +1,4 @@
+
 % authors: ziyan (zoe) zhu, stephen carr 
 % email: zzhu1@g.harvard.edu
 % Example calculation of the tTLG band structure
@@ -9,22 +10,22 @@ set(groot, 'DefaultAxesTickLabelInterpreter', 'Latex')
 set(0,'DefaultAxesFontSize',f_size)
 
 % setup & geometry 
-theta_list = [1.7 0 1.7];  % twisting angles in degree (global)
-k_cutoff = 3;           % cutoff
+theta_list = [-1.1 0 1.6];  % twisting angles in degree (global)
+k_cutoff = 4;           % cutoff
 grid_search = 20;       % [G1,G2] are in [-grid_search,grid_search]^2 
 
 proj = [1, 2, 3];       % sheet to project eigenvector weights onto
-q_cut_type = 3;         % what kind of line-cut we do in momentum space
+q_cut_type = 5;         % what kind of line-cut we do in momentum space
                         % 1: high symmetry line in the L12 bilayer moire Brillouin zone (single valley)
                         % 2: connecting the Dirac points of 3 layers 
                         % 3: high symmetry line in the L23 bilayer moire Brillouin zone (single valley)
                         % 4: high symmetry line in the trilayer moire of moire Brillouin zone (only works when twist angles are equal and not very useful) 
                         % 5: high symmetry line along K_L1 -> K_L2 -> Gamma_12 -> Gamma_23 -> K_L2 -> K_L3
-savedata = 0;           % save useful variables to folder ./data/
+savedata = 1;           % save useful variables to folder ./data/
 E_field = 0.0;          % vertical displacement field in eV (total potential energy across the three layers)
 num_eigs = 100;          % the number of eigenvalues to keep in the diagonalization (near 0 energy)
-nq = 30;                % number of k points to sample on each high symmetry line segment 
-color_on = 0;           % plot colors in the band structure (wavefunction weights) 
+nq = 40;                % number of k points to sample on each high symmetry line segment 
+color_on = 1;           % plot colors in the band structure (wavefunction weights) 
 alpha = 1.43*sqrt(3);
 
 % create layer data structures
@@ -258,7 +259,6 @@ r = [224, 40, 0]/255;
 g = [15, 255-80, 103]/255;
 
 
-
 if color_on 
     weights = weights / max(weights(:));
 end 
@@ -318,7 +318,7 @@ if color_on
     
 else 
     for d = 1:size(vals,2)
-    
+       %  plot(qarr,(vals(:,d))*1e3, 'k', 'LineWidth', 2);
         scatter(qarr,(vals(:,d))*1e3, 15, 'o', 'MarkerFaceColor', 'k', 'MarkerEdgeColor','none')
     end 
     
@@ -330,6 +330,7 @@ xticklabels(xt_labels);
 xlim([min(qarr) max(qarr)])
 title(['$\theta_{12} = ' num2str(abs(theta_list(1))) '^\circ, \theta_{23} = ' ...
     num2str(abs(theta_list(3))) '^\circ$']);
+exportgraphics(gcf, './figures/bands_tswg.pdf', 'ContentType','vector');
 
 %%
 if savedata 

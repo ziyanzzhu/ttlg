@@ -1,7 +1,5 @@
 % author: ziyan (zoe) zhu
 % email: zzhu1@g.harvard.edu
-
-
 % input: A0: lattice vecotrs
 % theta: twist angle in rad. 
 % delta: lattice mismatch

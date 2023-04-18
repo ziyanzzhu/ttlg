@@ -157,7 +157,7 @@ classdef kDoF_tri < handle
                 
             end 
             
-            idx_list = boolean(idx_list);
+            idx_list = logical(idx_list);
             
             disp(size(k_data))
             k_data = k_data(idx_list, :);

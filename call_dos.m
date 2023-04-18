@@ -2,16 +2,16 @@
 % email: zzhu1@g.harvard.edu
 % example calculatiion of the DOS
 clear all
-q1_list = 1.70;                    % list of \theta_{12} in deg.
-q2_list = [1.651];              % list of \theta_{23} in deg.
-k_cutoff = 2;                     % k space cutoff in the unit of reciprocal lattice constant   
+q1_list = 1;                    % list of \theta_{12} in deg.
+q2_list = [1];              % list of \theta_{23} in deg.
+k_cutoff = 4;                     % k space cutoff in the unit of reciprocal lattice constant   
 E_list = linspace(-1,1,1e3);  % list of energies in eV
 q_cut_type = 1;                   % type of Brillouin zone sampling. 
                                   % type 1: monolayer Brillouin zone
                                   % type 2: L12 moire Brillouin zone
                                   % type 3: L23 moire Brillouin zone
 num_eigs = 40;                    % number of eigenvalues to keep in the diagonalization
-nq = 35;                          % grid size
+nq = 21;                          % grid size
 E_field = 0;                      % vertical displacement field 
 save_data = 1; 
 a0 = 1.43 * sqrt(3);
@@ -33,7 +33,7 @@ end
 
 % total number of twist angles to calculate
 tot_pt = length(q1_list)*length(q2_list); 
-
+%%
 
 figure(234)
 set(gcf,'Position',[211 101 453 453])
@@ -46,6 +46,7 @@ for i = 1:tot_pt
     end 
     
     param = 8e-3;
+    disp(4*sqrt(2)/pi/param)
     lg{i} = ['$\theta_{12} = ' num2str(twist(1,i)) '^\circ$' 10 '$\theta_{23} = ' ...
         num2str(twist(2,i)) '^\circ$'];
     fprintf("Running twist angle %d/%d \n", i, tot_pt)
@@ -54,6 +55,7 @@ for i = 1:tot_pt
     toc
     
     % check monolayer fit 
+
     subplot(1,2,1)
     box on
     hold all; 
@@ -71,7 +73,7 @@ for i = 1:tot_pt
     plot(dos_tot,E_list, 'LineWidth', 2)
     ylim([-0.2 0.2])
     yticklabels([])
-    legend(lg)
+%     legend(lg)
     title('Full DOS')
     xlabel('DoS $\mathrm{(eV^{-1}\cdot\AA^{-2})}$');
 

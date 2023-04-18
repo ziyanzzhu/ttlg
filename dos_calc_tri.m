@@ -166,7 +166,7 @@ function [dos_tot, dos_tot_mono, dos_fit, prefac]=dos_calc_tri(alpha,q1_list,q2_
             
             % save data
             if save_data
-                save(['./data/' fname ], 'dos_tot', 'dos_tot_mono', 'param',...
+                save(['./alt_twist/' fname ], 'dos_tot', 'dos_tot_mono', 'param',...
                     'ndof', 'E_list', 'prefac', 'q12', 'q23','cond','dos_fit')
            
             end 
