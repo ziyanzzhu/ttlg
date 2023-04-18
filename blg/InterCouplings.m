@@ -124,7 +124,7 @@ classdef InterCouplings < handle
             %z = obj.B_meshz;
             theta_rad = obj.theta*pi/180;
             s = false; %true: top layer, false: bottom layer
-            
+            %{
             L = obj.layers(1).A;
     
             R = [cos(theta_rad) -sin(theta_rad); sin(theta_rad) cos(theta_rad)];
@@ -132,8 +132,12 @@ classdef InterCouplings < handle
             T = 2*pi*inv(L');
 
             G = (I-R')*T;
-
             supercell = inv(I-R);
+            %}
+            
+            G = obj.layers(2).G - obj.layers(1).G;
+            G_local = obj.layers(1).G_local;
+            supercell = (G_local*inv(G))';
             
             norbs = size(obj.orb_pos,2);
             for o1 = 1:norbs
