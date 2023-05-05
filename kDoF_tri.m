@@ -123,7 +123,7 @@ classdef kDoF_tri < handle
 %             disp(tar_dofs)
 
             k_vec = k_data(:, 1:3);
-            disp(length(k_vec))
+            % disp(length(k_vec))
             
             idx = 1; 
             idx_list = ones([length(k_vec), 1]);
@@ -159,7 +159,7 @@ classdef kDoF_tri < handle
             
             idx_list = logical(idx_list);
             
-            disp(size(k_data))
+            % disp(size(k_data))
             k_data = k_data(idx_list, :);
 %             disp(size(k_data))
  
